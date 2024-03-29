@@ -2,7 +2,7 @@ import graphene
 
 from core.schema import signal_mutation_module_validate
 from invoice.gql import query_mixins
-from invoice.gql.invoice import DeleteInvoiceMutation, GenerateTimeframeInvoices
+from invoice.gql.invoice.mutation import UpdateInvoiceMutation, DeleteInvoiceMutation, GenerateTimeframeInvoices
 from invoice.gql.invoice_event.mutation import CreateInvoiceEventMutation
 from invoice.gql.invoice_payment.mutation import (
     CreateInvoicePaymentMutation,
@@ -62,6 +62,7 @@ class Query(
 class Mutation(graphene.ObjectType):
     # invoice mutations
     generate_invoices_for_time_period = GenerateTimeframeInvoices.Field()
+    update_invoice = UpdateInvoiceMutation.Field()
     delete_invoice = DeleteInvoiceMutation.Field()
     create_invoice_payment = CreateInvoicePaymentMutation.Field()
     update_invoice_payment = UpdateInvoicePaymentMutation.Field()

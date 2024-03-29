@@ -14,7 +14,25 @@ from invoice.services import InvoiceService
 
 logger = logging.getLogger(__name__)
 
+from core.gql.gql_mutations.base_mutation import BaseHistoryModelUpdateMutationMixin
 
+class UpdateInvoiceMutation(BaseHistoryModelUpdateMutationMixin, BaseMutation):
+    _mutation_class = "UpdateInvoiceMutation"
+    _mutation_module = "invoice"
+    _model = Invoice
+
+    @classmethod
+    def _validate_mutation(cls, user, **data):
+        if type(user) is AnonymousUser or not user.id or not user.has_perms(
+                InvoiceConfig.gql_invoice_update_perms):
+            raise ValidationError("mutation.authentication_required")
+
+    class Input(OpenIMISMutation.Input):
+        id = graphene.ID(required=True)
+        status = graphene.String(required=False)
+        note = graphene.String(required=False)
+        paymentReference = graphene.String(required=False)
+        
 class DeleteInvoiceMutation(BaseHistoryModelDeleteMutationMixin, BaseMutation):
     _mutation_class = "DeleteInvoiceMutation"
     _mutation_module = "invoice"
